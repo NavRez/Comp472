@@ -54,6 +54,7 @@ if __name__ == "__main__":
     negSize = 0
     posWords = 0
     negWords = 0
+    
     for (doc,label) in zip(train_docs,train_labels):
         if label == "pos":
             for w in doc:
@@ -72,9 +73,14 @@ if __name__ == "__main__":
     comp_List = list()
 
     for truedoc in eval_docs:
-        compList.append(logarithm(freqsPosWords,freqsNegWords,poSize,negSize,posWords,negWords,truedoc))
+        comp_List.append(logarithm(freqsPosWords,freqsNegWords,poSize,negSize,posWords,negWords,truedoc))
 
     from sklearn.metrics import accuracy_score
+    from sklearn.metrics import confusion_matrix
+    from sklearn.metrics import precision_score
     print(accuracy_score(eval_labels,comp_List))
+    #print(precision_score(eval_labels,comp_List,average="samples"))
+    print(confusion_matrix(eval_labels,comp_List,labels=["pos","neg"]))
+    
 
 
