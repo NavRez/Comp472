@@ -72,15 +72,24 @@ if __name__ == "__main__":
 
     comp_List = list()
 
+    f= open("Naive-Bayes-dataset.txt","w")
+    intCounter = len(train_labels) 
     for truedoc in eval_docs:
-        comp_List.append(logarithm(freqsPosWords,freqsNegWords,poSize,negSize,posWords,negWords,truedoc))
+        intCounter+=1
+        output_string = logarithm(freqsPosWords,freqsNegWords,poSize,negSize,posWords,negWords,truedoc) 
+        comp_List.append(output_string)
+        f.write("%d,%s\n" % (intCounter,output_string))
 
     from sklearn.metrics import accuracy_score
     from sklearn.metrics import confusion_matrix
     from sklearn.metrics import precision_score
-    print(accuracy_score(eval_labels,comp_List))
+    accuracy = accuracy_score(eval_labels,comp_List)
+    f.write("\naccuracy : %s\n" %(accuracy))
+    print(accuracy)
     #print(precision_score(eval_labels,comp_List,average="samples"))
     print(confusion_matrix(eval_labels,comp_List,labels=["pos","neg"]))
+    f.write("\nconfusion matrix : \n %s\n" %(str(confusion_matrix(eval_labels,comp_List,labels=["pos","neg"]))))
+    f.close()
     
 
 
