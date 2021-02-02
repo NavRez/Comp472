@@ -2,6 +2,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import LabelEncoder
 from codecs import open
 import numpy as np
+import math
 #from __future__ import division
 
 def read_documents(doc_file):
@@ -17,6 +18,23 @@ def read_documents(doc_file):
             labels.append(words[1])
     return docs, labels
 
+def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,train):
+    totalpos = math.log(pos/(pos+neg))
+    totalneg = math.log(neg/(pos+neg))
+    for word in train:
+        pval = PosDict[word]+2
+        nval = NegDict[word]+2
+        totalpos += math.log(pval/(pWords+len(PosDict)*2))
+        totalneg += math.log(nval/(nWords+len(NegDict)*2))
+
+    if totalpos > totalneg:
+        return "pos"
+    else:
+        return "neg"
+
+
+
+
 if __name__ == "__main__":
 
     all_docs, all_labels = read_documents("dataset.txt")
@@ -28,22 +46,35 @@ if __name__ == "__main__":
     eval_labels = all_labels[split_point:]
 
     from collections import Counter
-    freqsPos = Counter()
-    freqsNeg = Counter()
+    freqsPosWords = Counter()
+    freqsNegWords = Counter()
 
     import itertools
     poSize = 0
     negSize = 0
+    posWords = 0
+    negWords = 0
     for (doc,label) in zip(train_docs,train_labels):
-        for w in doc:
-            if label == "pos":
-                freqsPos[w] += 1
-                poSize +=1
-            else:
-                freqsNeg[w] += 1
-                negSize += 1
-        
-    print(poSize)
-    print(negSize)
+        if label == "pos":
+            for w in doc:
+                freqsPosWords[w] += 1
+                posWords+=1
+            poSize +=1
+        else:
+            for w in doc:
+                freqsNegWords[w] += 1
+                negWords+=1
+            negSize +=1
+
+    print(len(freqsPosWords))
+    print(len(freqsNegWords))
+
+    compList = list()
+
+    for truedoc in eval_docs:
+        compList.append(logarithm(freqsPosWords,freqsNegWords,poSize,negSize,posWords,negWords,truedoc))
+
+    from sklearn.metrics import accuracy_score
+    print(accuracy_score(eval_labels,compList))
 
 
