@@ -18,14 +18,14 @@ def read_documents(doc_file):
             labels.append(words[1])
     return docs, labels
 
-def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,train):
+def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,extraWords,train):
     totalpos = math.log(pos/(pos+neg))
     totalneg = math.log(neg/(pos+neg))
     for word in train:
-        pval = PosDict[word]+2
-        nval = NegDict[word]+2
-        totalpos += math.log(pval/(pWords+len(PosDict)*2))
-        totalneg += math.log(nval/(nWords+len(NegDict)*2))
+        pval = PosDict[word]+1
+        nval = NegDict[word]+1
+        totalpos += math.log(pval/(pWords+extraWords))
+        totalneg += math.log(nval/(nWords+extraWords))
 
     if totalpos > totalneg:
         return "pos"
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     all_docs, all_labels = read_documents("dataset.txt")
 
-    split_point = int(0.80*len(all_docs))
+    split_point = int(0.75*len(all_docs))
     train_docs = all_docs[:split_point]
     train_labels = all_labels[:split_point]  
     eval_docs = all_docs[split_point:]
@@ -48,6 +48,7 @@ if __name__ == "__main__":
     from collections import Counter
     freqsPosWords = Counter()
     freqsNegWords = Counter()
+    freqs = Counter()
 
     import itertools
     poSize = 0
@@ -59,16 +60,18 @@ if __name__ == "__main__":
         if label == "pos":
             for w in doc:
                 freqsPosWords[w] += 1
+                freqs[w] +=1
                 posWords+=1
             poSize +=1
         else:
             for w in doc:
                 freqsNegWords[w] += 1
+                freqs[w] +=1
                 negWords+=1
             negSize +=1
+        
 
-    print(len(freqsPosWords))
-    print(len(freqsNegWords))
+    print(len(freqs))
 
     comp_List = list()
 
@@ -76,7 +79,7 @@ if __name__ == "__main__":
     intCounter = len(train_labels) 
     for truedoc in eval_docs:
         intCounter+=1
-        output_string = logarithm(freqsPosWords,freqsNegWords,poSize,negSize,posWords,negWords,truedoc) 
+        output_string = logarithm(freqsPosWords,freqsNegWords,poSize,negSize,posWords,negWords,len(freqs),truedoc) 
         comp_List.append(output_string)
         f.write("%d,%s\n" % (intCounter,output_string))
 
