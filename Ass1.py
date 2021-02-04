@@ -24,8 +24,11 @@ def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,extraWords,train):
     for word in train:
         pval = PosDict[word]+1
         nval = NegDict[word]+1
-        totalpos += math.log(pval/(pWords+extraWords))
-        totalneg += math.log(nval/(nWords+extraWords))
+        if(pval==nval==1):
+            i = 2
+        else:
+            totalpos += math.log(pval/(pWords+extraWords))
+            totalneg += math.log(nval/(nWords+extraWords))
 
     if totalpos > totalneg:
         return "pos"
@@ -90,7 +93,16 @@ if __name__ == "__main__":
     f.write("\naccuracy : %s\n" %(accuracy))
     print(accuracy)
     #print(precision_score(eval_labels,comp_List,average="samples"))
-    print(confusion_matrix(eval_labels,comp_List,labels=["pos","neg"]))
+    confuse = confusion_matrix(eval_labels,comp_List,labels=["pos","neg"])
+
+    precision = confuse[0][0]/(confuse[1][1] + confuse[0][0])
+    recall = confuse[0][0]/(confuse[1][0] + confuse[0][0])
+    f1 = 2*precision*recall/(recall+precision)
+
+    f.write("\nprecision : %s\n" %(str(precision)))
+    f.write("\nrecall : %s\n" %(str(recall)))
+    f.write("\nf1 : %s\n" %(str(f1)))
+    print(confuse)
     f.write("\nconfusion matrix : \n %s\n" %(str(confusion_matrix(eval_labels,comp_List,labels=["pos","neg"]))))
     f.close()
     
