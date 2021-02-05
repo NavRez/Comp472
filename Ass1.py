@@ -40,7 +40,7 @@ def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,extraWords,train):
 
 if __name__ == "__main__":
 
-    all_docs, all_labels = read_documents("dataset.txt")
+    all_docs, all_labels = read_documents("all_sentiment_shuffled.txt")
 
     split_point = int(0.75*len(all_docs))
     train_docs = all_docs[:split_point]
@@ -78,6 +78,7 @@ if __name__ == "__main__":
 
     comp_List = list()
 
+
     f= open("Naive-Bayes-dataset.txt","w")
     intCounter = len(train_labels) 
     for truedoc in eval_docs:
@@ -86,6 +87,7 @@ if __name__ == "__main__":
         comp_List.append(output_string)
         f.write("%d,%s\n" % (intCounter,output_string))
 
+    print("pos" in comp_List)
     from sklearn.metrics import accuracy_score
     from sklearn.metrics import confusion_matrix
     from sklearn.metrics import precision_score
@@ -95,15 +97,19 @@ if __name__ == "__main__":
     #print(precision_score(eval_labels,comp_List,average="samples"))
     confuse = confusion_matrix(eval_labels,comp_List,labels=["pos","neg"])
 
-    precision = confuse[0][0]/(confuse[1][1] + confuse[0][0])
+    precision = confuse[0][0]/(confuse[0][1] + confuse[0][0])
     recall = confuse[0][0]/(confuse[1][0] + confuse[0][0])
     f1 = 2*precision*recall/(recall+precision)
+    
+    print(precision)
+    print(recall)
+    print(f1)
+    print(confuse)
 
     f.write("\nprecision : %s\n" %(str(precision)))
     f.write("\nrecall : %s\n" %(str(recall)))
     f.write("\nf1 : %s\n" %(str(f1)))
-    print(confuse)
-    f.write("\nconfusion matrix : \n %s\n" %(str(confusion_matrix(eval_labels,comp_List,labels=["pos","neg"]))))
+    f.write("\nconfusion matrix : \n %s\n" %(confuse))
     f.close()
     
 
