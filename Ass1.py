@@ -25,7 +25,7 @@ def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,extraWords,train):
         pval = PosDict[word]+1
         nval = NegDict[word]+1
         if(pval==nval==1):
-            i = 2
+            continue
         else:
             totalpos += math.log(pval/(pWords+extraWords))
             totalneg += math.log(nval/(nWords+extraWords))
