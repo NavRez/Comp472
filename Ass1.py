@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     all_docs, all_labels = read_documents("all_sentiment_shuffled.txt")
 
-    split_point = int(0.75*len(all_docs))
+    split_point = int(0.80*len(all_docs))
     train_docs = all_docs[:split_point]
     train_labels = all_labels[:split_point]  
     eval_docs = all_docs[split_point:]
@@ -87,16 +87,13 @@ if __name__ == "__main__":
         comp_List.append(output_string)
         f.write("%d,%s\n" % (intCounter,output_string))
 
-    print("pos" in comp_List)
     from sklearn.metrics import accuracy_score
     from sklearn.metrics import confusion_matrix
-    from sklearn.metrics import precision_score
     accuracy = accuracy_score(eval_labels,comp_List)
     f.write("\naccuracy : %s\n" %(accuracy))
     print(accuracy)
-    #print(precision_score(eval_labels,comp_List,average="samples"))
-    confuse = confusion_matrix(eval_labels,comp_List,labels=["pos","neg"])
 
+    confuse = confusion_matrix(eval_labels,comp_List,labels=["pos","neg"])
     precision = confuse[0][0]/(confuse[0][1] + confuse[0][0])
     recall = confuse[0][0]/(confuse[1][0] + confuse[0][0])
     f1 = 2*precision*recall/(recall+precision)
