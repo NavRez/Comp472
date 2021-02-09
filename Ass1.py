@@ -151,7 +151,42 @@ if __name__ == "__main__":
 
         set_scores(eval_labels,comp_List,f)
     else:
-        a = 6
+        from sklearn import tree
+        clf  = tree.DecisionTreeClassifier()
+        df = pd.DataFrame(all_docs).to_numpy(na_value="")
+
+        # convert your list of lists into token id's. For example, 'aa bb' could be represented as a 2, a as a 1, etc.
+        tdict = corpora.Dictionary(df)
+
+        newlist = []
+        counter = 0
+        for l in df:
+            tmplist = []
+            for word in l:
+                # append to intermediate list the id for the given word under observation
+                tmplist.append(tdict.token2id[word])
+            # convert to numpy array and append to main list
+            newlist.append(np.array(tmplist).astype(float)) # type float
+            print(counter)
+            counter+=1
+
+        split_point = int(0.80*len(newlist))
+        train_docs = newlist[:split_point]
+        train_labels = all_labels[:split_point]  
+        eval_docs = newlist[split_point:]
+        eval_labels = all_labels[split_point:]
+
+        
+        clf = clf.fit(train_docs,train_labels)
+        comp_List = clf.predict(eval_docs)
+
+        f= open("DT-BEST-dataset.txt","w")
+        intCounter = len(train_labels) 
+        for truelabel in comp_List:
+            intCounter+=1
+            f.write("%d,%s\n" % (intCounter,truelabel))
+
+        set_scores(eval_labels,comp_List,f)
     
 
 
