@@ -38,7 +38,28 @@ def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,extraWords,train):
         return "neg"
 
 
+def set_scores(eval_labels,comp_List,f):
+    from sklearn.metrics import accuracy_score
+    from sklearn.metrics import confusion_matrix
+    accuracy = accuracy_score(eval_labels,comp_List)
+    f.write("\naccuracy : %s\n" %(accuracy))
+    print(accuracy)
 
+    confuse = confusion_matrix(eval_labels,comp_List,labels=["pos","neg"])
+    precision = confuse[0][0]/(confuse[0][1] + confuse[0][0])
+    recall = confuse[0][0]/(confuse[1][0] + confuse[0][0])
+    f1 = 2*precision*recall/(recall+precision)
+    
+    print(precision)
+    print(recall)
+    print(f1)
+    print(confuse)
+
+    f.write("\nprecision : %s\n" %(str(precision)))
+    f.write("\nrecall : %s\n" %(str(recall)))
+    f.write("\nf1 : %s\n" %(str(f1)))
+    f.write("\nconfusion matrix : \n %s\n" %(confuse))
+    f.close()
 
 if __name__ == "__main__":
 
@@ -81,11 +102,7 @@ if __name__ == "__main__":
                 negSize +=1
             
 
-        print(len(freqs))
-
         comp_List = list()
-
-
         f= open("Naive-Bayes-dataset.txt","w")
         intCounter = len(train_labels) 
         for truedoc in eval_docs:
@@ -94,28 +111,8 @@ if __name__ == "__main__":
             comp_List.append(output_string)
             f.write("%d,%s\n" % (intCounter,output_string))
 
-        from sklearn.metrics import accuracy_score
-        from sklearn.metrics import confusion_matrix
-        accuracy = accuracy_score(eval_labels,comp_List)
-        f.write("\naccuracy : %s\n" %(accuracy))
-        print(accuracy)
-
-        confuse = confusion_matrix(eval_labels,comp_List,labels=["pos","neg"])
-        precision = confuse[0][0]/(confuse[0][1] + confuse[0][0])
-        recall = confuse[0][0]/(confuse[1][0] + confuse[0][0])
-        f1 = 2*precision*recall/(recall+precision)
+        set_scores(eval_labels,comp_List,f)
         
-        print(precision)
-        print(recall)
-        print(f1)
-        print(confuse)
-
-        f.write("\nprecision : %s\n" %(str(precision)))
-        f.write("\nrecall : %s\n" %(str(recall)))
-        f.write("\nf1 : %s\n" %(str(f1)))
-        f.write("\nconfusion matrix : \n %s\n" %(confuse))
-        f.close()
-
     elif choice =="2":
         from sklearn import tree
         clf  = tree.DecisionTreeClassifier(criterion="entropy")
@@ -152,27 +149,7 @@ if __name__ == "__main__":
             intCounter+=1
             f.write("%d,%s\n" % (intCounter,truelabel))
 
-        from sklearn.metrics import accuracy_score
-        from sklearn.metrics import confusion_matrix
-        accuracy = accuracy_score(eval_labels,comp_List)
-        f.write("\naccuracy : %s\n" %(accuracy))
-        print(accuracy)
-
-        confuse = confusion_matrix(eval_labels,comp_List,labels=["pos","neg"])
-        precision = confuse[0][0]/(confuse[0][1] + confuse[0][0])
-        recall = confuse[0][0]/(confuse[1][0] + confuse[0][0])
-        f1 = 2*precision*recall/(recall+precision)
-        
-        print(precision)
-        print(recall)
-        print(f1)
-        print(confuse)
-
-        f.write("\nprecision : %s\n" %(str(precision)))
-        f.write("\nrecall : %s\n" %(str(recall)))
-        f.write("\nf1 : %s\n" %(str(f1)))
-        f.write("\nconfusion matrix : \n %s\n" %(confuse))
-        f.close()
+        set_scores(eval_labels,comp_List,f)
     else:
         a = 6
     
