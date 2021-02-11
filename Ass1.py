@@ -191,14 +191,23 @@ if __name__ == "__main__":
 
     evalPos,evalNeg = plotcounter(eval_labels)
 
-    objects =("Bayes-Pos","Bayes-Neg","DT-Pos","DT-Neg","DTB-Pos","DTB-Pos","real-Pos","real-Neg")
-    y_pos = np.arange(len(objects))
-    perform = (Bpos,Bneg,DTpos,DTneg,DTBestpos,DTBestneg,evalPos,evalNeg)
+    objects =("Bayes", "DT", "DTBest", "Real")
+    print(len(objects))
+    width = 0.35 
+    ind = np.arange(4)
+    performPOs = (Bpos,DTpos,DTBestpos,evalPos)
+    performNEg = (Bneg,DTneg,DTBestneg,evalNeg)
 
-    plt.bar(y_pos, perform, align='center', alpha=0.5)
-    plt.xticks(y_pos, objects)
-    plt.ylabel('rate')
-    plt.title('Instances by Model')
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(ind, performPOs, width, color='g')
+    rects2 = ax.bar(ind + width, performNEg, width, color='r')
+
+    ax.set_ylabel('Instances')
+    ax.set_title('Instance by Model')
+    ax.set_xticks(ind + width / 2)
+    ax.set_xticklabels(objects)
+
+    ax.legend((rects1[0], rects2[0]), ('Pos', 'Neg'))
 
     plt.show()
     ####################### DT-Base ends
