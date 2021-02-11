@@ -78,6 +78,7 @@ def listify(df,tdict):
         newlist = []
         counter = 0
         print("Beginning conversion...")
+        # code snippet taken directly from https://stackoverflow.com/questions/41130350/list-array-of-strings-to-numpy-float-array
         for l in df:
             tmplist = []
             for word in l:
