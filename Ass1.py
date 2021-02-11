@@ -121,7 +121,7 @@ if __name__ == "__main__":
                 negWords+=1
             negSize +=1
         
-
+    #testing
     comp_List = list()
     f= open("Naive-Bayes-dataset.txt","w")
     intCounter = len(train_labels) 
