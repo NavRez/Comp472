@@ -1,6 +1,7 @@
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import LabelEncoder
 from sklearn import tree
+import matplotlib.pyplot as plt
 from codecs import open
 from gensim import corpora 
 import pandas as pd
@@ -38,6 +39,15 @@ def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,extraWords,train):
     else:
         return "neg"
 
+def plotcounter (plotter):
+    posC = 0
+    negC = 0
+    for plot in plotter:
+        if plot =="pos":
+            posC+=1
+        else:
+            negC+=1
+    return posC,negC
 
 def set_scores(eval_labels,comp_List,f):
     from sklearn.metrics import accuracy_score
@@ -133,6 +143,8 @@ if __name__ == "__main__":
 
     set_scores(eval_labels,comp_List,f)
     print("Printing of Naive Bayes complete\n\n")
+
+    Bpos,Bneg = plotcounter(comp_List)
     ####################### Naive ends
     
     ### DT delimitation ###
@@ -156,6 +168,8 @@ if __name__ == "__main__":
 
     set_scores(eval_labels,comp_List,f)
     print("Printing of DT-Base complete\n\n")
+
+    DTpos,DTneg = plotcounter(comp_List)
     ####################### DT-Base ends
 
     ####################### DT-Best starts
@@ -172,6 +186,21 @@ if __name__ == "__main__":
 
     set_scores(eval_labels,comp_List,f)
     print("Printing DT-Best complete")
+
+    DTBestpos,DTBestneg = plotcounter(comp_List)
+
+    evalPos,evalNeg = plotcounter(eval_labels)
+
+    objects =("Bayes-Pos","Bayes-Neg","DT-Pos","DT-Neg","DTB-Pos","DTB-Pos","real-Pos","real-Neg")
+    y_pos = np.arange(len(objects))
+    perform = (Bpos,Bneg,DTpos,DTneg,DTBestpos,DTBestneg,evalPos,evalNeg)
+
+    plt.bar(y_pos, perform, align='center', alpha=0.5)
+    plt.xticks(y_pos, objects)
+    plt.ylabel('rate')
+    plt.title('Instances by Model')
+
+    plt.show()
     ####################### DT-Base ends
     
 
