@@ -72,6 +72,8 @@ def set_scores(eval_labels,comp_List,f):
     f.write("\nconfusion matrix : \n %s\n" %(confuse))
     f.close()
 
+    return confuse
+
 def listify(df,tdict):
         newlist = []
         counter = 0
@@ -141,7 +143,7 @@ if __name__ == "__main__":
         comp_List.append(output_string)
         f.write("%d,%s\n" % (intCounter,output_string))
 
-    set_scores(eval_labels,comp_List,f)
+    confuseBayes = set_scores(eval_labels,comp_List,f)
     print("Printing of Naive Bayes complete\n\n")
 
     Bpos,Bneg = plotcounter(comp_List)
@@ -166,7 +168,7 @@ if __name__ == "__main__":
         intCounter+=1 
         f.write("%d,%s\n" % (intCounter,truelabel))
 
-    set_scores(eval_labels,comp_List,f)
+    confuseDT = set_scores(eval_labels,comp_List,f)
     print("Printing of DT-Base complete\n\n")
 
     DTpos,DTneg = plotcounter(comp_List)
@@ -184,7 +186,7 @@ if __name__ == "__main__":
         intCounter+=1
         f.write("%d,%s\n" % (intCounter,truelabel))
 
-    set_scores(eval_labels,comp_List,f)
+    confuseDTB = set_scores(eval_labels,comp_List,f)
     print("Printing DT-Best complete")
 
     DTBestpos,DTBestneg = plotcounter(comp_List)
@@ -197,17 +199,21 @@ if __name__ == "__main__":
     ind = np.arange(4)
     performPOs = (Bpos,DTpos,DTBestpos,evalPos)
     performNEg = (Bneg,DTneg,DTBestneg,evalNeg)
+    errorPerfPos = (confuseBayes[0][0],confuseDT[0][0],confuseDTB[0][0],0)
+    errorPerfNeg = (confuseBayes[1][1],confuseDT[1][1],confuseDTB[1][1],0)
 
     fig, ax = plt.subplots()
     rects1 = ax.bar(ind, performPOs, width, color='g')
     rects2 = ax.bar(ind + width, performNEg, width, color='r')
+    rects3 = ax.bar(ind, errorPerfPos, width, color='b')
+    rects4 = ax.bar(ind + width, errorPerfNeg, width, color='y')
 
     ax.set_ylabel('Instances')
     ax.set_title('Instance by Model')
     ax.set_xticks(ind + width / 2)
     ax.set_xticklabels(objects)
 
-    ax.legend((rects1[0], rects2[0]), ('Pos', 'Neg'))
+    ax.legend((rects1[0], rects2[0],rects3[0], rects4[0]), ('Pos', 'Neg',"True Pos","True Neg"))
 
     plt.show()
     ####################### DT-Base ends
