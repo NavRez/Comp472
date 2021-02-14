@@ -22,17 +22,17 @@ def read_documents(doc_file):
             labels.append(words[1])
     return docs, labels
 
-def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,extraWords,train):
+def logarithm(PosDict,NegDict,pos,neg,pWords,nWords,extraWords,train,mult):
     totalpos = math.log(pos/(pos+neg))
     totalneg = math.log(neg/(pos+neg))
     for word in train:
-        pval = PosDict[word]+1
-        nval = NegDict[word]+1
+        pval = PosDict[word]+1*mult
+        nval = NegDict[word]+1*mult
         if(pval==nval==1):
             continue
         else:
-            totalpos += math.log(pval/(pWords+extraWords))
-            totalneg += math.log(nval/(nWords+extraWords))
+            totalpos += math.log(pval/(pWords+int(extraWords*mult)))
+            totalneg += math.log(nval/(nWords+int(extraWords*mult)))
 
     if totalpos > totalneg:
         return "pos"
@@ -90,6 +90,18 @@ def listify(df,tdict):
             counter+=1
         return newlist
 
+# taken from https://matplotlib.org/3.1.1/gallery/lines_bars_and_markers/barchart.html#sphx-glr-gallery-lines-bars-and-markers-barchart-py
+def autolabel(rects,ax):
+    """Attach a text label above each bar in *rects*, displaying its height."""
+    for rect in rects:
+        height = rect.get_height()
+        ax.annotate('{}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0, 3),  # 3 points vertical offset
+                    textcoords="offset points",
+                    ha='center', va='bottom')
+
+
 if __name__ == "__main__":
 
     all_docs, all_labels = read_documents("all_sentiment_shuffled.txt")
@@ -133,14 +145,30 @@ if __name__ == "__main__":
                 freqs[w] +=1
                 negWords+=1
             negSize +=1
-        
+    
+    figes, axes = plt.subplots()
+    langs = ['pos','neg']
+    students = [poSize,negSize]
+    width = 0.35
+    ind = np.arange(2)
+    rect = axes.bar(np.arange(2), students, width, color='r')
+
+    axes.set_ylabel('Instances')
+    axes.set_title('Pos Vs Neg')
+    axes.set_xticks(ind)
+    axes.set_xticklabels(langs)
+
+    autolabel(rect,axes)
+
+    plt.show(block=False)
+    plt.pause(0.001)
     
     comp_List = list()
     f= open("Naive-Bayes-dataset.txt","w")
     intCounter = len(train_labels) 
     for truedoc in eval_docs:
         intCounter+=1
-        output_string = logarithm(freqsPosWords,freqsNegWords,poSize,negSize,posWords,negWords,len(freqs),truedoc) 
+        output_string = logarithm(freqsPosWords,freqsNegWords,poSize,negSize,posWords,negWords,len(freqs),truedoc,1) 
         comp_List.append(output_string)
         f.write("%d,%s\n" % (intCounter,output_string))
 
