@@ -10,14 +10,15 @@ import math
 #from __future__ import division
 
 def read_documents(doc_file):
-    docs = []
     labels = []
+    docs = []
     with open(doc_file, encoding='utf-8') as f:
         for line in f:
             words = line.strip().split()
             new_words = list()
             for word in words[3:]:
-                new_words.append(str(word))
+                if (word.isalpha() and len(word) > 2):
+                    new_words.append(str(word))     
             docs.append(new_words)
             labels.append(words[1])
     return docs, labels
@@ -243,7 +244,7 @@ if __name__ == "__main__":
     ax.set_xticklabels(objects)
 
     ax.legend((rects1[0], rects2[0],rects3[0], rects4[0]), ('Pos', 'Neg',"True Pos","True Neg"))
-
+    plt.grid(True)
     plt.show()
     ####################### DT-Base ends
     
