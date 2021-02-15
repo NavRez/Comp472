@@ -10,14 +10,15 @@ import math
 #from __future__ import division
 
 def read_documents(doc_file):
-    docs = []
     labels = []
+    docs = []
     with open(doc_file, encoding='utf-8') as f:
         for line in f:
             words = line.strip().split()
             new_words = list()
             for word in words[3:]:
-                new_words.append(str(word))
+                if (word.isalpha() and len(word) > 2):
+                    new_words.append(str(word))     
             docs.append(new_words)
             labels.append(words[1])
     return docs, labels
@@ -78,6 +79,7 @@ def listify(df,tdict):
         newlist = []
         counter = 0
         print("Beginning conversion...")
+        # code snippet taken directly from https://stackoverflow.com/questions/41130350/list-array-of-strings-to-numpy-float-array
         for l in df:
             tmplist = []
             for word in l:
@@ -243,8 +245,10 @@ if __name__ == "__main__":
 
     ax.legend((rects1[0], rects2[0],rects3[0], rects4[0]), ('Pos', 'Neg',"True Pos","True Neg"))
 
+    plt.grid(True)
     plt.show(block=False)
     plt.pause(10)
+    plt.show()
     ####################### DT-Base ends
     
 
