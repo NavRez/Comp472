@@ -10,14 +10,20 @@ import math
 #from __future__ import division
 
 def read_documents(doc_file):
-    docs = []
     labels = []
+    docs = []
     with open(doc_file, encoding='utf-8') as f:
         for line in f:
             words = line.strip().split()
             new_words = list()
             for word in words[3:]:
-                new_words.append(str(word))
+                deleteChar = False 
+                for i in word:
+                    if (not (i.isalpha())):
+                        deleteChar = True
+                        continue
+                if (not deleteChar and len(word) > 2):
+                    new_words.append(str(word))     
             docs.append(new_words)
             labels.append(words[1])
     return docs, labels
