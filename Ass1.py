@@ -206,7 +206,8 @@ if __name__ == "__main__":
 
     ####################### DT-Best starts
     print("Printing DT-Best : acc,precision, recall , f1 and confuse in that order")
-    clf  = tree.DecisionTreeClassifier(splitter="random")
+
+    clf  = tree.DecisionTreeClassifier(criterion="entropy",splitter="random",class_weight="balanced",max_features="auto")
     clf = clf.fit(train_docs,train_labels)
     comp_List = clf.predict(eval_docs)
 
@@ -224,7 +225,6 @@ if __name__ == "__main__":
     evalPos,evalNeg = plotcounter(eval_labels)
 
     objects =("Bayes", "DT", "DTBest", "Real")
-    print(len(objects))
     width = 0.35 
     ind = np.arange(4)
     performPOs = (Bpos,DTpos,DTBestpos,evalPos)
@@ -244,7 +244,10 @@ if __name__ == "__main__":
     ax.set_xticklabels(objects)
 
     ax.legend((rects1[0], rects2[0],rects3[0], rects4[0]), ('Pos', 'Neg',"True Pos","True Neg"))
+
     plt.grid(True)
+    plt.show(block=False)
+    plt.pause(10)
     plt.show()
     ####################### DT-Base ends
     
