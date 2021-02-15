@@ -249,7 +249,7 @@ if __name__ == "__main__":
     ax.set_xticklabels(objects)
 
     ax.legend((rects1[0], rects2[0],rects3[0], rects4[0]), ('Pos', 'Neg',"True Pos","True Neg"))
-
+    plt.grid(True)
     plt.show()
     ####################### DT-Base ends
     
