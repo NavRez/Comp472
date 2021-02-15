@@ -17,12 +17,7 @@ def read_documents(doc_file):
             words = line.strip().split()
             new_words = list()
             for word in words[3:]:
-                deleteChar = False 
-                for i in word:
-                    if (not (i.isalpha())):
-                        deleteChar = True
-                        continue
-                if (not deleteChar and len(word) > 2):
+                if (word.isalpha() and len(word) > 2):
                     new_words.append(str(word))     
             docs.append(new_words)
             labels.append(words[1])
