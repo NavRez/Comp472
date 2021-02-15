@@ -248,7 +248,6 @@ if __name__ == "__main__":
     plt.grid(True)
     plt.show(block=False)
     plt.pause(10)
-    plt.show()
     ####################### DT-Base ends
     
 
