@@ -80,6 +80,39 @@ def set_scores(eval_labels,comp_List,f):
 
     return confuse
 
+def set_scoresAlt(eval_labels, comp_List, f):
+    from sklearn.metrics import accuracy_score
+    from sklearn.metrics import confusion_matrix
+    accuracy = accuracy_score(eval_labels, comp_List)
+    f.write("\naccuracy : %s\n" % (accuracy))
+    print(accuracy)
+
+    confuse = confusion_matrix(eval_labels, comp_List, labels=["pos", "neg"])
+    posPrecision = confuse[0][0] / (confuse[1][0] + confuse[0][0])
+    posRecall = confuse[0][0] / (confuse[0][1] + confuse[0][0])
+    posf1 = 2 * posPrecision * posRecall / (posRecall + posPrecision)
+
+    negPrecision = confuse[1][1] / (confuse[0][1] + confuse[1][1])
+    negRecall = confuse[1][1] / (confuse[1][0] + confuse[1][1])
+    negf1 = 2 * negPrecision * negRecall / (negRecall + negPrecision)
+
+    print("Positive Precision: " + posPrecision + ", Positive Recall: " + posRecall + ", Positive F1: " + posf1)
+    print("Negative Precision: " + negPrecision + ", Negative Recall: " + negRecall + ", Negative F1: " + negf1)
+    print(confuse)
+
+    f.write("\n positive precision : %s\n" % (str(posPrecision)))
+    #prec = confuse[1][1] / (confuse[1][1] + confuse[1][0])
+    f.write("\nnegative precision : %s\n" % (str(negPrecision)))
+    f.write("\npositive recall : %s\n" % (str(posRecall)))
+    f.write("\nnegative recall : %s\n" % (str(negRecall)))
+    #rec = confuse[1][1] / (confuse[1][1] + confuse[0][1])
+    f.write("\npositive f1 : %s\n" % (str(posf1)))
+    f.write("\nnegative f1 : %s\n" % (str(negf1)))
+    f.write("\nconfusion matrix : \n %s\n" % (confuse))
+    f.close()
+
+    return confuse
+
 def listify(df,tdict):
         newlist = []
         counter = 0
