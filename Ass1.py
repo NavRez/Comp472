@@ -58,8 +58,8 @@ def set_scores(eval_labels,comp_List,f):
     print(accuracy)
 
     confuse = confusion_matrix(eval_labels,comp_List,labels=["pos","neg"])
-    precision = confuse[0][0]/(confuse[0][1] + confuse[0][0])
-    recall = confuse[0][0]/(confuse[1][0] + confuse[0][0])
+    precision = confuse[0][0]/(confuse[1][0] + confuse[0][0])
+    recall = confuse[0][0]/(confuse[0][1] + confuse[0][0])
     f1 = 2*precision*recall/(recall+precision)
     
     print(precision)
@@ -68,11 +68,11 @@ def set_scores(eval_labels,comp_List,f):
     print(confuse)
 
     f.write("\nprecision : %s\n" %(str(precision)))
-    prec = confuse[1][1]/(confuse[1][1] + confuse[1][0])
-    f.write("\nneg prec : %s\n" %(str(confuse[1][1]/(confuse[1][1] + confuse[1][0]))))
+    prec = confuse[1][1]/(confuse[1][1] + confuse[0][1])
+    f.write("\nneg prec : %s\n" %(str(confuse[1][1]/(confuse[1][1] + confuse[0][1]))))
     f.write("\nrecall : %s\n" %(str(recall)))
-    f.write("\nneg rec : %s\n" %(str(confuse[1][1]/(confuse[1][1] + confuse[0][1]))))
-    rec = confuse[1][1]/(confuse[1][1] + confuse[0][1])
+    f.write("\nneg rec : %s\n" %(str(confuse[1][1]/(confuse[1][1] + confuse[1][0]))))
+    rec = confuse[1][1]/(confuse[1][1] + confuse[1][0])
     f.write("\nf1 : %s\n" %(str(f1)))
     f.write("\nneg f1 : %s\n" %(str(2*prec*rec/(rec + prec))))
     f.write("\nconfusion matrix : \n %s\n" %(confuse))
